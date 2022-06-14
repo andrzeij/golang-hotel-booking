@@ -1,0 +1,17 @@
+.my-footer {
+  height: 5em;
+  background-color: darkslategrey;
+  margin-top: 1.5em;
+  padding: 1em;
+  color: whitesmoke;
+  font-size: 80%;
+}
+
+.notie-container {
+  box-shadow: none;
+}
+
+.datepicker {
+  position: relative;
+  z-index: 10000;
+}

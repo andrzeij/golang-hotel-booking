@@ -9,21 +9,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/css/datepicker-bs4.min.css">
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/notie/dist/notie.min.css">
+    <link rel="stylesheet" type="text/css" href="static/css/styles.css">
 
-    <style>
-      .my-footer {
-        height: 5em;
-        background-color:darkslategrey;
-        margin-top: 1.5em;
-        padding: 1em;
-        color: whitesmoke;
-        font-size: 80%;
-      }
-
-      .notie-container {
-        box-shadow: none;
-      }
-      </style>
     </head>
   <body>
 
@@ -114,8 +101,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.min.js" integrity="sha384-VHvPCCyXqtD5DqJeNxl2dtTyhF78xXNXdkwX1CZeRusQfRKp+tA7hAShOK/B/fQ2" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/vanillajs-datepicker@1.2.0/dist/js/datepicker-full.min.js"></script>
     <script src="https://unpkg.com/notie"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
+      let displayAlerts = PromtAlerts();
+
       (function() {
         'use strict';
         window.addEventListener('load', function() {
@@ -141,7 +131,29 @@
       
 
       document.getElementById("buttonAlert").addEventListener("click", function(){
-        notifyAlert("success", "This is my hello message");
+        let html = `
+          <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">            
+            <div class="form-row">
+              <div class="col">
+                <div class="form-row" id="reservation-dates-modal">
+                  <div class="col">
+                    <input required type="text" class="form-control" name="arrival-date" id="arrival-date" placeholder="Arrival date">
+                  </div>
+                  <div class="col">
+                    <input required type="text" class="form-control" name="depature-date" id="depature-date" placeholder="Depature date">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        `;
+
+        // notifyAlert("success", "This is my hello message");
+        // dialogAlert("Test", "<em>Hello world</em>", "success", "Continue");
+        // displayAlerts.toast({msg: "Hello world", icon: "error"});
+        // displayAlerts.error({msg: "Ooppss!"});
+        displayAlerts.test({msg: html, title: "Choose your dates"});
+
       })
 
       function notifyAlert(msgType, msgText) {
@@ -151,6 +163,114 @@
         });
       }
 
+      function dialogAlert(title, text, icon, confirmButtonText) {
+        Swal.fire({
+          title: title,
+          html: text,
+          icon: icon,
+          confirmButtonText: confirmButtonText,
+        });
+      }
+
+      function PromtAlerts() {
+        let toast = function(c) {
+          const {
+            msg = "",
+            icon = "success",
+            position = "top-end",
+          } = c;
+
+          const Toast = Swal.mixin({
+            toast: true,
+            title: msg,
+            position: position,
+            icon: icon,
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer)
+              toast.addEventListener('mouseleave', Swal.resumeTimer)
+            }
+          })
+                      
+          Toast.fire({})
+
+          console.log("clicked button and got toast");
+        }
+        
+        let success = function(c) {
+          const {
+            msg = "",
+            title = "",
+            footer = "",
+          } = c;
+
+          Swal.fire({
+            icon: 'success',
+            title: title,
+            text: msg,
+            footer: footer,
+          })
+        }
+
+        let error = function(c) {
+          const {
+            msg = "",
+            title = "",
+            footer = "",
+          } = c;
+
+          Swal.fire({
+            icon: 'error',
+            title: title,
+            text: msg,
+            footer: footer,
+          })
+        }
+
+        async function test(c) {
+          const {
+            msg = "",
+            title = "",
+          } = c;
+          
+          const { value: formValues } = await Swal.fire({
+            title: title,
+            html: msg,
+            backdrop: false,
+            focusConfirm: false,
+            showCancelButton: true,
+            willOpen: () => {
+              const elem = document.getElementById('reservation-dates-modal');
+              const rangepicker = new DateRangePicker(elem, {
+                format: "dd/mm/yyyy",
+                // autohide: true,
+                showOnClick: true,
+                showOnFocus: false,
+              });
+            },
+            preConfirm: () => {
+              return [
+                document.getElementById('arrival-date').value,
+                document.getElementById('depature-date').value
+              ]
+            }
+          })
+          
+          if (formValues) {
+            Swal.fire(JSON.stringify(formValues))
+          }
+          
+        }
+
+        return {
+          toast: toast,
+          success: success,
+          error: error,
+          test: test,
+        }
+      }
 
     </script>
 
