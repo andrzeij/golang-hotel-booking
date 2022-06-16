@@ -1,0 +1,50 @@
+{{template "base" .}}
+
+{{define "content"}}
+
+<div class="container">
+  <div class="row">
+    <div class="col col-xl-2 col-lg-2"></div>
+    <div class="col col-xl-8 col-lg-8 col-12">
+      <img src="/static/images/roberto-nickson-GaBDdA63GcQ-unsplash-landscape.jpeg" class="img-fluid img-thumbnail" alt="Double deluxe image">
+    </div>
+    <div class="col col-xl-2 col-lg-2"></div>
+  </div>
+  <div class="row">
+    <div class="col">
+      <h1 class="text-center mt-4">Double Deluxe</h1>
+      <p>Your ultimate vacation destination. The place to get rejuvenate and enjoy the warm cottage in the middle of mountain top overlook the majestic valley view down below. The perfect place to spend the weekend with your family and friends. Complementary hot chocolate and ginger biscuits upon arrival. Live music at the bar every night with selection of jazz, blues and souls. Imagine looking at the bright stars everynight and you may want to here for a few more nights.</p>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col text-center">
+      <a id="check-availability-button" href="#!" class="btn btn-success">Check Availability</a>
+    </div>
+  </div>
+</div>
+
+{{ end }}
+
+{{define "js"}}
+  <script>
+    document.getElementById("check-availability-button").addEventListener("click", function(){
+      let html = `
+        <form id="check-availability-form" action="" method="post" novalidate class="needs-validation">            
+          <div class="form-row">
+            <div class="col">
+              <div class="form-row" id="reservation-dates-modal">
+                <div class="col">
+                  <input required type="text" class="form-control" name="arrival-date" id="arrival-date" placeholder="Arrival date">
+                </div>
+                <div class="col">
+                  <input required type="text" class="form-control" name="depature-date" id="depature-date" placeholder="Depature date">
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      `;
+      displayAlerts.test({msg: html, title: "Choose your dates"});
+    })
+  </script>
+{{end}}
