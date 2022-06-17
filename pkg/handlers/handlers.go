@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/andreijy/golang-hotel-booking/pkg/config"
@@ -33,7 +34,7 @@ func (m *Repository) Home(w http.ResponseWriter, r *http.Request, ) {
 	remoteIP := r.RemoteAddr
 	m.App.Session.Put(r.Context(), "remote_ip", remoteIP)
 
-	render.RenderTemplate(w, "home.page.gohtml", &models.TemplateData{})
+	render.RenderTemplate(w, r, "home.page.gohtml", &models.TemplateData{})
 }
 
 // About is the about page handler
@@ -46,32 +47,40 @@ func (m *Repository) About(w http.ResponseWriter, r *http.Request) {
 	stringMap["remote_ip"] = remoteIP
 
 	// send the data to the template
-	render.RenderTemplate(w, "about.page.gohtml", &models.TemplateData{
+	render.RenderTemplate(w, r, "about.page.gohtml", &models.TemplateData{
 		StringMap: stringMap,
 	})
 }
 
 // Reservation renders the make a reservation page and display form
 func (m *Repository) Reservation(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "make-reservation.page.gohtml", &models.TemplateData{})
+	render.RenderTemplate(w, r, "make-reservation.page.gohtml", &models.TemplateData{})
 }
 
 // President renders the room page
 func (m *Repository) President(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "president-suite.page.gohtml", &models.TemplateData{})
+	render.RenderTemplate(w, r, "president-suite.page.gohtml", &models.TemplateData{})
 }
 
 // Deluxe renders the room page
 func (m *Repository) Deluxe(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "double-deluxe.page.gohtml", &models.TemplateData{})
+	render.RenderTemplate(w, r, "double-deluxe.page.gohtml", &models.TemplateData{})
 }
 
 // Availability renders the search availability page
 func (m *Repository) Availability(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "search-availability.page.gohtml", &models.TemplateData{})
+	render.RenderTemplate(w, r, "search-availability.page.gohtml", &models.TemplateData{})
+}
+
+// PostAvailability renders the search availability page
+func (m *Repository) PostAvailability(w http.ResponseWriter, r *http.Request) {
+	start := r.Form.Get("start-date")
+	end := r.Form.Get("end-date")
+
+	w.Write([]byte(fmt.Sprintf("Start date is %s and end date is %s", start, end)))
 }
 
 // Contact renders the contact page
 func (m *Repository) Contact(w http.ResponseWriter, r *http.Request) {
-	render.RenderTemplate(w, "contact.page.gohtml", &models.TemplateData{})
+	render.RenderTemplate(w, r, "contact.page.gohtml", &models.TemplateData{})
 }
